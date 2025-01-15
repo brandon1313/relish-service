@@ -83,7 +83,7 @@ export class PhotoService {
         responseData,
       );
     } catch (error) {
-      console.error('Error fetching filtered photos:', error);
+      console.error('Error fetching filtered photos: ', error);
       throw new Error('Could not fetch filtered photos');
     }
   }
