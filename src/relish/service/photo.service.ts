@@ -6,6 +6,7 @@ import { User } from '../model/user.model';
 import { PhotoAdapter } from '../adapter/photo.adapter';
 import { AlbumService } from './album.service';
 import { UserService } from './user.service';
+import { PaginationResponseDTO } from '../dto/pagination.response.dto';
 
 @Injectable()
 export class PhotoService {
@@ -30,7 +31,7 @@ export class PhotoService {
     title?: string,
     albumTitle?: string,
     userEmail?: string,
-  ): Promise<PhotoEnrichResponse[]> {
+  ): Promise<PaginationResponseDTO<PhotoEnrichResponse>> {
     try {
       const photos: Photo[] = await this.photoAdapter.getAll();
       const albums: Album[] = await this.albumService.getAlbums();
@@ -71,7 +72,16 @@ export class PhotoService {
         })
         .filter((photo) => photo !== null) as PhotoEnrichResponse[];
 
-      return enrichedPhotos.slice(offset, Number(offset) + Number(limit));
+      const responseData = enrichedPhotos.slice(
+        offset,
+        Number(offset) + Number(limit),
+      );
+      return new PaginationResponseDTO(
+        limit,
+        offset,
+        enrichedPhotos.length,
+        responseData,
+      );
     } catch (error) {
       console.error('Error fetching filtered photos:', error);
       throw new Error('Could not fetch filtered photos');

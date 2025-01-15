@@ -3,6 +3,7 @@ import { Controller, Get, Query, Param } from '@nestjs/common';
 import { PhotoService } from '../service/photo.service';
 import { PhotoEnrichResponse } from '../model/photo-enrich-response.model';
 import { GetPhotosQueryDto } from '../dto/photo-query.dto';
+import { PaginationResponseDTO } from '../dto/pagination.response.dto';
 
 @Controller('photos')
 export class PhotoController {
@@ -11,7 +12,7 @@ export class PhotoController {
   @Get()
   async getPhotos(
     @Query() query: GetPhotosQueryDto,
-  ): Promise<PhotoEnrichResponse[]> {
+  ): Promise<PaginationResponseDTO<PhotoEnrichResponse>> {
     const { limit, offset, title, albumTitle, userEmail } = query;
     return await this.photoService.getFilteredPhotos(
       limit,
